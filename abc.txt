@@ -1,0 +1,175 @@
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+from collections import Counter
+from bs4 import BeautifulSoup  # Import BeautifulSoup for HTML parsing
+
+# Load the dataset
+data = pd.read_csv('Training_Dataset.csv')  # Replace with your dataset filename
+
+# Strip any leading/trailing whitespaces in the columns
+data['Category'] = data['Category'].str.strip()
+data['Message'] = data['Message'].str.strip()
+
+# Function to clean HTML content using BeautifulSoup
+def clean_html(text):
+    soup = BeautifulSoup(text, "html.parser")
+    return soup.get_text()  # Extract text from HTML
+
+# Apply cleaning to the 'Message' column
+data['Message'] = data['Message'].apply(clean_html)
+
+# Separate HAM and SPAM messages
+ham_messages = data[data['Category'] == 'ham']['Message']
+spam_messages = data[data['Category'] == 'spam']['Message']
+
+# Vectorize the messages using n-grams (unigrams and bigrams) and stopword removal
+vectorizer = CountVectorizer(
+    stop_words='english',   # Removes common words like "the," "is," etc.
+    ngram_range=(1, 2),     # Uses both unigrams and bigrams (word pairs)
+    min_df=2,               # Ignores words that appear in fewer than 2 documents
+    max_df=0.8              # Ignores words that appear in more than 80% of documents
+)
+
+# Vectorize HAM and SPAM messages
+ham_word_counts = vectorizer.fit_transform(ham_messages)
+ham_vocab = vectorizer.get_feature_names_out()
+ham_counts = ham_word_counts.sum(axis=0).A1
+
+spam_word_counts = vectorizer.fit_transform(spam_messages)
+spam_vocab = vectorizer.get_feature_names_out()
+spam_counts = spam_word_counts.sum(axis=0).A1
+
+# Combine words and their frequencies into dictionaries
+ham_word_freq = dict(zip(ham_vocab, ham_counts))
+spam_word_freq = dict(zip(spam_vocab, spam_counts))
+
+# Get the common words between HAM and SPAM
+common_words = set(ham_word_freq.keys()) & set(spam_word_freq.keys())
+
+# Eliminate common words from one category based on frequency comparison
+for word in common_words:
+    if ham_word_freq[word] > spam_word_freq[word]:
+        # Remove the word from SPAM
+        del spam_word_freq[word]
+    elif spam_word_freq[word] > ham_word_freq[word]:
+        # Remove the word from HAM
+        del ham_word_freq[word]
+
+# Get the top 20 most frequent words for each category after elimination
+ham_top_words = Counter(ham_word_freq).most_common(20)
+spam_top_words = Counter(spam_word_freq).most_common(20)
+
+# Print the results
+print("Top 20 Words in HAM Emails (After Elimination):")
+for word, count in ham_top_words:
+    print(f"{word}: {count}")
+
+print("\nTop 20 Words in SPAM Emails (After Elimination):")
+for word, count in spam_top_words:
+    print(f"{word}: {count}")
+
+# Save results to CSV for better visualization
+pd.DataFrame(ham_top_words, columns=['Word', 'Frequency']).to_csv('ham_top_words_after_elimination.csv', index=False)
+pd.DataFrame(spam_top_words, columns=['Word', 'Frequency']).to_csv('spam_top_words_after_elimination.csv', index=False)
+
+
+according to this code above toggle my below code as i find suitable words it is specifing to understand wether the message is ham or spam
+
+
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score, confusion_matrix
+import joblib
+import tkinter as tk
+from tkinter import ttk, messagebox
+
+def train_spam_model(filename='Training_Dataset.csv'):
+    """Train a model to detect spam emails using the updated dataset."""
+    # Load dataset
+    df = pd.read_csv(filename)
+    
+    # Ensure columns are used correctly
+    df['Category'] = df['Category'].str.strip()  # Clean up whitespace if needed
+    df['Message'] = df['Message'].str.strip()
+    
+    # Vectorize the text data
+    vectorizer = CountVectorizer()
+    X = vectorizer.fit_transform(df['Message'])
+    y = df['Category']  # Labels: ham or spam
+    
+    # Split data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    
+    # Train the model
+    model = MultinomialNB()
+    model.fit(X_train, y_train)
+    
+    # Evaluate the model
+    y_pred = model.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+    cm = confusion_matrix(y_test, y_pred)
+    
+    print(f'Model Accuracy: {accuracy:.2f}')
+    print('Confusion Matrix:')
+    print(cm)
+    
+    # Save the model and vectorizer for later use
+    joblib.dump(model, 'spam_model.pkl')
+    joblib.dump(vectorizer, 'vectorizer.pkl')
+    
+    return model, vectorizer
+
+def detect_email_type():
+    """Detect if the email is spam or ham using the trained model."""
+    message = body_text.get("1.0", tk.END).strip()
+    
+    if not message:
+        messagebox.showwarning("Input Error", "Please provide the email content.")
+        return
+    
+    model = joblib.load('spam_model.pkl')
+    vectorizer = joblib.load('vectorizer.pkl')
+    X = vectorizer.transform([message])
+    prediction = model.predict(X)[0]
+
+    if prediction == "spam":
+        messagebox.showerror("Result", "🚨 This Email is SPAM! 🚨")
+    else:
+        messagebox.showinfo("Result", "✅ This Email is HAM (Safe to Go)! ✅")
+    
+    clear_fields()
+
+def clear_fields():
+    """Clear input fields."""
+    body_text.delete("1.0", tk.END)
+
+if __name__ == '__main__':
+    print("Training spam detection model...")
+    train_spam_model('Training_Dataset.csv')  # Replace with your dataset filename
+
+    # Initialize main window
+    root = tk.Tk()
+    root.title("Email Spam Detector")
+    root.geometry("600x400")
+    root.config(bg="#1f1f2e")
+
+    style = ttk.Style()
+    style.theme_use("clam")
+    style.configure("TLabel", background="#1f1f2e", foreground="#f8f8f8", font=("Helvetica", 12, "bold"))
+    style.configure("TButton", font=("Helvetica", 12, "bold"), background="#ff6600", foreground="white")
+    style.configure("TText", font=("Helvetica", 12))
+
+    title_label = ttk.Label(root, text="Enter Email Content", font=("Helvetica", 18, "bold"))
+    title_label.pack(pady=10)
+
+    body_label = ttk.Label(root, text="Message:")
+    body_label.pack(anchor="w", padx=20)
+    body_text = tk.Text(root, wrap="word", height=10, width=50, font=("Helvetica", 12))
+    body_text.pack(pady=5, padx=20)
+
+    submit_button = ttk.Button(root, text="Submit", command=detect_email_type)
+    submit_button.pack(pady=20)
+
+    root.mainloop()

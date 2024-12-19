@@ -1,0 +1,265 @@
+########################################################################## 1'st Pass ################################################################
+
+Top 10 Words in HAM Emails:
+you: 1948
+to: 1562
+the: 1133
+and: 858
+in: 823
+me: 777
+my: 754
+is: 739
+it: 718
+that: 560
+
+Top 10 Words in SPAM Emails:
+to: 688
+call: 352
+you: 297
+your: 264
+free: 224
+for: 204
+the: 203
+now: 199
+or: 188
+txt: 163
+
+
+########################################################################## 2'nd Pass ################################################################
+
+Top 10 Words in HAM Emails:
+      Frequency
+gt          318
+lt          316
+just        297
+ok          288
+ll          266
+ur          247
+know        237
+good        235
+like        234
+got         233
+
+Top 10 Words in SPAM Emails:
+        Frequency
+free          224
+txt           163
+ur            144
+mobile        127
+text          125
+stop          121
+claim         111
+reply         104
+www            98
+prize          91
+
+
+########################################################################## 3'rd Pass ################################################################
+
+Top 10 Words in HAM Emails:
+just: 297
+ok: 288
+ll: 266
+ur: 247
+know: 237
+good: 235
+like: 234
+got: 233
+come: 230
+
+Top 10 Words in SPAM Emails:
+free: 224
+txt: 163
+ur: 144
+mobile: 127
+text: 125
+stop: 121
+claim: 111
+reply: 104
+www: 98
+prize: 91
+
+########################################################################## 4'th Pass ################################################################
+Top 20 Words in HAM Emails:
+gt: 318
+lt: 316
+just: 297
+ok: 288
+lt gt: 276
+ll: 266
+ur: 247
+know: 237
+good: 235
+like: 234
+got: 233
+come: 230
+day: 212
+love: 205
+time: 202
+going: 169
+home: 165
+want: 165
+lor: 162
+don: 159
+
+Top 20 Words in SPAM Emails:
+free: 224
+txt: 163
+ur: 144
+mobile: 127
+text: 125
+stop: 121
+claim: 111
+reply: 104
+www: 98
+prize: 91
+just: 77
+cash: 76
+uk: 74
+won: 73
+150p: 71
+send: 71
+new: 69
+nokia: 67
+win: 64
+urgent: 62
+
+########################################################################## 5'th Pass ################################################################
+
+Top 20 Words in HAM Emails:
+just: 297
+ok: 288
+ll: 266
+ur: 247
+know: 237
+good: 235
+like: 234
+got: 233
+come: 230
+day: 212
+love: 205
+time: 202
+going: 169
+home: 165
+want: 165
+lor: 162
+don: 159
+need: 159
+sorry: 157
+da: 150
+
+Top 20 Words in SPAM Emails:
+free: 224
+txt: 163
+ur: 144
+mobile: 127
+text: 125
+stop: 121
+claim: 111
+reply: 104
+www: 98
+prize: 91
+just: 77
+cash: 76
+uk: 74
+won: 73
+150p: 71
+send: 71
+new: 69
+nokia: 67
+win: 64
+urgent: 62
+
+
+########################################################################## 6'th Pass ################################################################
+
+Top 20 Common Words in HAM Emails:
+just: 297
+ok: 288
+ll: 266
+ur: 247
+know: 237
+good: 235
+like: 234
+got: 233
+come: 230
+day: 212
+love: 205
+time: 202
+going: 169
+home: 165
+want: 165
+need: 159
+don: 159
+sorry: 157
+today: 139
+dont: 137
+
+Top 20 Common Words in SPAM Emails:
+free: 224
+txt: 163
+ur: 144
+mobile: 127
+text: 125
+stop: 121
+reply: 104
+www: 98
+just: 77
+cash: 76
+won: 73
+send: 71
+new: 69
+nokia: 67
+win: 64
+urgent: 62
+week: 58
+50: 56
+service: 56
+contact: 55
+
+
+########################################################################## 7'th Pass ################################################################
+
+Top 20 Words in HAM Emails (After Elimination):
+just: 297
+ok: 288
+ll: 266
+ur: 247
+know: 237
+good: 235
+like: 234
+got: 233
+come: 230
+day: 212
+love: 205
+time: 202
+going: 169
+home: 165
+want: 165
+lor: 162
+don: 159
+need: 159
+sorry: 157
+da: 150
+
+Top 20 Words in SPAM Emails (After Elimination):
+free: 224
+txt: 163
+mobile: 127
+text: 125
+stop: 121
+claim: 111
+reply: 104
+www: 98
+prize: 91
+cash: 76
+uk: 74
+won: 73
+150p: 71
+new: 69
+nokia: 67
+win: 64
+urgent: 62
+tone: 60
+50: 56
+service: 56
